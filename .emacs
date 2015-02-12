@@ -61,8 +61,7 @@
   (eval-after-load "color-theme"
     '(progn
        (color-theme-initialize)
-       (require 'color-theme-solarized)
-       (color-theme-solarized-dark)))
+       (color-theme-high-contrast)))
   )
 
 ;; easy on eyes first
