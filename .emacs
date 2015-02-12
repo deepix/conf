@@ -31,6 +31,7 @@
 			     org
 			     p4
 			     column-marker
+			     go-mode
 			     linum-relative)
   "Default packages")
 
