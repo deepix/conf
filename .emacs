@@ -19,7 +19,7 @@
 ;; 	     '("marmalade" .
 ;; 	       "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+	     '("melpa" . "http://melpa.org/packages/") t)
 
 ;; code below plagiarized from:
 ;; http://www.aaronbedra.com/emacs.d/
@@ -29,7 +29,7 @@
 			     color-theme
 			     xcscope
 			     org
-			     p4
+			     magit
 			     column-marker
 			     go-mode
 			     linum-relative)
@@ -72,11 +72,10 @@
 ;; some customizations
 ;; gives problems on emacs23
 ;;(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+;;(tool-bar-mode nil)
+(menu-bar-mode -99)
 (column-number-mode t)
 (transient-mark-mode t)
-(global-linum-mode 1)
 (setq make-backup-files nil)
 ;; this makes backup files go away
 (setq backup-directory-alist `((".*" . , temporary-file-directory)))
@@ -104,7 +103,7 @@
 ;; compilation
 (setq compilation-scroll-output t)
 (set-default 'compile-command "make buildnsvm_assert")
-(load-library "p4")
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; cscope
 (setq cscope-option-do-not-update-database t)
@@ -165,9 +164,10 @@
 	    (c-set-style "linux-tabs-only")
 	    (linum-mode 1)))
 
-;;(add-to-list 'clean-buffer-list-kill-regexps
-;;	     '("\\`\\*P4 .*"))
 (setq clean-buffer-list-delay-general 30)
+
+;; deepaknag 07/10/15
+(add-to-list 'load-path "/opt/boxen/homebrew/share/emacs/site-lisp")
 
 ;; remove trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
