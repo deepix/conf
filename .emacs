@@ -30,8 +30,9 @@
 			     xcscope
 			     org
 			     magit
-			     column-marker
+			     fill-column-indicator
 			     go-mode
+			     markdown-mode
 			     linum-relative)
   "Default packages")
 
@@ -93,7 +94,8 @@
 (show-paren-mode t)
 (require 'auto-complete-config)
 (ac-config-default)
-(add-hook 'c-mode-common-hook (lambda () (interactive) (column-marker-1 72)))
+
+(require 'fill-column-indicator)
 
 ;; syntax highlighting
 (global-font-lock-mode t)
@@ -102,7 +104,6 @@
 (setq font-lock-maximum-size 262144)
 ;; compilation
 (setq compilation-scroll-output t)
-(set-default 'compile-command "make buildnsvm_assert")
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;; cscope
@@ -171,25 +172,3 @@
 
 ;; remove trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(compilation-message-face (quote default))
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#657b83")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
- '(custom-safe-themes (quote ("e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" default)))
- '(ediff-diff-options "-w ")
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-tail-colors (quote (("#eee8d5" . 0) ("#B4C342" . 20) ("#69CABF" . 30) ("#69B7F0" . 50) ("#DEB542" . 60) ("#F2804F" . 70) ("#F771AC" . 85) ("#eee8d5" . 100))))
- '(magit-diff-use-overlays nil)
- '(weechat-color-list (quote (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496"))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
