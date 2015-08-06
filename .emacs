@@ -24,7 +24,6 @@
 ;; code below plagiarized from:
 ;; http://www.aaronbedra.com/emacs.d/
 (defvar deepaknag/packages '(solarized-theme
-			     theme-changer
 			     auto-complete
 			     color-theme
 			     xcscope
@@ -53,9 +52,7 @@
   (load-theme 'solarized-light t)
   (setq calendar-location-name "San Jose, CA")
   (setq calendar-latitude 37.33)
-  (setq calendar-longitude -121.89)
-  (require 'theme-changer)
-  (change-theme 'solarized-light 'solarized-dark))
+  (setq calendar-longitude -121.89))
 
 (defun color-theme-emacs23 ()
   (require 'color-theme)
