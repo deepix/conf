@@ -21,6 +21,8 @@
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/") t)
 
+;; XXX: removed magit: put it back later
+
 ;; code below plagiarized from:
 ;; http://www.aaronbedra.com/emacs.d/
 (defvar deepaknag/packages '(solarized-theme
@@ -28,7 +30,6 @@
 			     color-theme
 			     xcscope
 			     org
-			     magit
 			     fill-column-indicator
 			     go-mode
 			     markdown-mode
@@ -146,6 +147,11 @@
 	 (steps (floor offset c-basic-offset)))
     (* (max steps 1)
        c-basic-offset)))
+
+;; always enable fill-column-indicator mode
+(setq fci-rule-column 80)
+(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+(global-fci-mode 1)
 
 (add-hook 'c-mode-common-hook
           (lambda ()
