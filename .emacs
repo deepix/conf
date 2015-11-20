@@ -15,11 +15,15 @@
   (load "package"))
 
 (package-initialize)
+
 ;; (add-to-list 'package-archives
 ;; 	     '("marmalade" .
 ;; 	       "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/") t)
+
+;; p4 mode
+(require 'p4)
 
 ;; XXX: removed magit: put it back later
 
@@ -50,7 +54,7 @@
 
 (defun color-theme-emacs-default ()
   ;; change theme to day/night depending on time of day
-  (load-theme 'solarized-light t)
+  (load-theme 'solarized-dark t)
   (setq calendar-location-name "San Jose, CA")
   (setq calendar-latitude 37.33)
   (setq calendar-longitude -121.89))
@@ -166,7 +170,10 @@
 	     '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end)
 	    (setq indent-tabs-mode t)
 	    (c-set-style "linux-tabs-only")
-	    (linum-mode 1)))
+	    (linum-mode 1)
+		(set-face-attribute 'linum nil :background "#222")
+))
+
 
 (setq clean-buffer-list-delay-general 30)
 
@@ -175,3 +182,6 @@
 
 ;; remove trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(custom-set-faces (if (not window-system)
+		      '(default ((t (:background "nil"))))))
