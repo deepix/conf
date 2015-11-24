@@ -1,5 +1,7 @@
 ;; deepaknag's dot emacs
 
+;; (setq debug-on-error t)
+
 ;; silence is golden ...
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
@@ -25,18 +27,16 @@
 ;; p4 mode
 (require 'p4)
 
-;; XXX: removed magit: put it back later
-
 ;; code below plagiarized from:
 ;; http://www.aaronbedra.com/emacs.d/
 (defvar deepaknag/packages '(solarized-theme
-			     auto-complete
 			     color-theme
+			     better-defaults
+			     auto-complete
+			     flycheck
+			     ggtags
 			     xcscope
-			     org
-			     fill-column-indicator
-			     go-mode
-			     markdown-mode
+			     function-args
 			     linum-relative)
   "Default packages")
 
@@ -51,6 +51,50 @@
   (dolist (pkg deepaknag/packages)
     (when (not (package-installed-p pkg))
       (package-install pkg))))
+
+(require 'better-defaults)
+
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))))
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+;;; Setup auto-complete ;;;
+(require 'auto-complete)
+(require 'auto-complete-config)
+(ac-config-default)
+(setq ac-delay 0.1)
+
+(add-hook 'after-init-hook 'global-flycheck-mode)
+(global-set-key (kbd "C-c <up>") 'flycheck-next-error)
+(global-set-key (kbd "C-c <down>") 'flycheck-previous-error)
+(global-set-key (kbd "C-c l") 'flycheck-list-errors)
+(setq-default flymake-no-changes-timeout '3)
+
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
+
+(require 'function-args)
+(fa-config-default)
+
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+
+;; use with gdb -i=mi ...
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t
+ )
 
 (defun color-theme-emacs-default ()
   ;; change theme to day/night depending on time of day
@@ -73,10 +117,6 @@
   (color-theme-emacs-default))
 
 ;; some customizations
-;; gives problems on emacs23
-;;(scroll-bar-mode -1)
-;;(tool-bar-mode nil)
-(menu-bar-mode -99)
 (column-number-mode t)
 (transient-mark-mode t)
 (setq make-backup-files nil)
@@ -93,11 +133,6 @@
 ;; dev environment
 (cwarn-mode t)
 (which-func-mode t)
-(show-paren-mode t)
-(require 'auto-complete-config)
-(ac-config-default)
-
-(require 'fill-column-indicator)
 
 ;; syntax highlighting
 (global-font-lock-mode t)
@@ -106,11 +141,10 @@
 (setq font-lock-maximum-size 262144)
 ;; compilation
 (setq compilation-scroll-output t)
-(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; cscope
 (setq cscope-option-do-not-update-database t)
-;; (setq cscope-do-not-update-database t)
+(setq cscope-program "gtags-cscope")
 (cscope-setup)
 
 ;; comment out "#if 0" blocks in c mode
@@ -152,11 +186,6 @@
     (* (max steps 1)
        c-basic-offset)))
 
-;; always enable fill-column-indicator mode
-(setq fci-rule-column 80)
-(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-(global-fci-mode 1)
-
 (add-hook 'c-mode-common-hook
           (lambda ()
             (c-add-style
@@ -169,16 +198,13 @@
 	     nil
 	     '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end)
 	    (setq indent-tabs-mode t)
+            (linum-mode 1)
 	    (c-set-style "linux-tabs-only")
-	    (linum-mode 1)
-		(set-face-attribute 'linum nil :background "#222")
+	    (set-face-attribute 'linum nil :background "#222")
 ))
 
 
 (setq clean-buffer-list-delay-general 30)
-
-;; deepaknag 07/10/15
-(add-to-list 'load-path "/opt/boxen/homebrew/share/emacs/site-lisp")
 
 ;; remove trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
