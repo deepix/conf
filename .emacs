@@ -10,7 +10,7 @@
 (add-to-list 'load-path "~/conf/elisp/")
 
 ;; else "loop" below won't run
-(require 'cl)
+(require 'cl-lib)
 
 (if (< emacs-major-version 24)
     (require 'package)
@@ -34,9 +34,8 @@
 			     better-defaults
 			     auto-complete
 			     flycheck
-			     ggtags
 			     xcscope
-			     function-args
+                             nyan-mode
 			     linum-relative)
   "Default packages")
 
@@ -54,18 +53,8 @@
 
 (require 'better-defaults)
 
-(require 'ggtags)
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-              (ggtags-mode 1))))
-(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
-(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
-(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
-(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
-(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
-(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
-(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+(require 'saveplace)
+(setq-default save-place t)
 
 ;;; Setup auto-complete ;;;
 (require 'auto-complete)
@@ -82,16 +71,12 @@
 (when (fboundp 'winner-mode)
       (winner-mode 1))
 
-(require 'function-args)
-(fa-config-default)
-
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
 
 ;; use with gdb -i=mi ...
 (setq
  ;; use gdb-many-windows by default
  gdb-many-windows t
-
  ;; Non-nil means display source file containing the main routine at startup
  gdb-show-main t
  )
@@ -129,10 +114,18 @@
 
 ;; don't let emacs die when i mistype c-x c-c
 (setq confirm-kill-emacs 'yes-or-no-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; dev environment
 (cwarn-mode t)
 (which-func-mode t)
+
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
+
+(size-indication-mode t)
+(nyan-mode)
 
 ;; syntax highlighting
 (global-font-lock-mode t)
@@ -144,7 +137,6 @@
 
 ;; cscope
 (setq cscope-option-do-not-update-database t)
-(setq cscope-program "gtags-cscope")
 (cscope-setup)
 
 ;; comment out "#if 0" blocks in c mode
@@ -186,6 +178,9 @@
     (* (max steps 1)
        c-basic-offset)))
 
+(add-hook 'prog-mode-hook 'linum-mode)
+(setq linum-format "%5d ")
+
 (add-hook 'c-mode-common-hook
           (lambda ()
             (c-add-style
@@ -198,7 +193,6 @@
 	     nil
 	     '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end)
 	    (setq indent-tabs-mode t)
-            (linum-mode 1)
 	    (c-set-style "linux-tabs-only")
 	    (set-face-attribute 'linum nil :background "#222")
 ))
