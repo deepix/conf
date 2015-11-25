@@ -68,6 +68,8 @@
 (global-set-key (kbd "C-c l") 'flycheck-list-errors)
 (setq-default flymake-no-changes-timeout '3)
 
+(setq ediff-diff-options "-w")
+
 (when (fboundp 'winner-mode)
       (winner-mode 1))
 
@@ -83,7 +85,7 @@
 
 (defun color-theme-emacs-default ()
   ;; change theme to day/night depending on time of day
-  (load-theme 'solarized-dark t)
+  (load-theme 'solarized-light t)
   (setq calendar-location-name "San Jose, CA")
   (setq calendar-latitude 37.33)
   (setq calendar-longitude -121.89))
@@ -194,7 +196,6 @@
 	     '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end)
 	    (setq indent-tabs-mode t)
 	    (c-set-style "linux-tabs-only")
-	    (set-face-attribute 'linum nil :background "#222")
 ))
 
 
@@ -202,6 +203,3 @@
 
 ;; remove trailing whitespace before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-(custom-set-faces (if (not window-system)
-		      '(default ((t (:background "nil"))))))
