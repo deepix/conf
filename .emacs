@@ -32,8 +32,8 @@
 (defvar deepaknag/packages '(solarized-theme
 			     color-theme
 			     better-defaults
+                             column-marker
 			     auto-complete
-			     flycheck
 			     xcscope
                              nyan-mode
 			     linum-relative)
@@ -53,6 +53,9 @@
 
 (require 'better-defaults)
 
+(require 'column-marker)
+(add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
+
 (require 'saveplace)
 (setq-default save-place t)
 
@@ -62,11 +65,11 @@
 (ac-config-default)
 (setq ac-delay 0.1)
 
-(add-hook 'after-init-hook 'global-flycheck-mode)
-(global-set-key (kbd "C-c <up>") 'flycheck-next-error)
-(global-set-key (kbd "C-c <down>") 'flycheck-previous-error)
-(global-set-key (kbd "C-c l") 'flycheck-list-errors)
-(setq-default flymake-no-changes-timeout '3)
+;; (add-hook 'after-init-hook 'global-flycheck-mode)
+;; (global-set-key (kbd "C-c <up>") 'flycheck-next-error)
+;; (global-set-key (kbd "C-c <down>") 'flycheck-previous-error)
+;; (global-set-key (kbd "C-c l") 'flycheck-list-errors)
+;; (setq-default flymake-no-changes-timeout '3)
 
 (setq ediff-diff-options "-w")
 
