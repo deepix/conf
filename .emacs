@@ -34,6 +34,8 @@
 			     better-defaults
                              column-marker
 			     auto-complete
+			     flycheck
+                             highlight
 			     xcscope
                              nyan-mode
 			     linum-relative)
@@ -185,6 +187,9 @@
 
 (add-hook 'prog-mode-hook 'linum-mode)
 (setq linum-format "%5d ")
+
+(add-hook 'after-save-hook
+  'executable-make-buffer-file-executable-if-script-p)
 
 (add-hook 'c-mode-common-hook
           (lambda ()
