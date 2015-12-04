@@ -91,7 +91,7 @@
   :type 'string
   :group 'p4)
 
-(defcustom p4-default-diff-options "-du"
+(defcustom p4-default-diff-options "-dub"
   "Options to pass to diff, diff2, describe, and resolve.
 Set to:
 -dn     (RCS)
@@ -3317,7 +3317,7 @@ is NIL, otherwise return NIL."
       (p4-reopen (list "-t" type (match-string 2))))))
 
 (defun p4-opened-list-change (change)
-  (interactive 
+  (interactive
    (list (p4-completing-read 'pending "New change: ")))
   (save-excursion
     (beginning-of-line)
