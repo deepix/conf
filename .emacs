@@ -58,6 +58,9 @@
 (require 'column-marker)
 (add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 80)))
 
+;; else M-x rgrep doesn't work in fish
+(setq shell-file-name "/bin/sh")
+
 (require 'saveplace)
 (setq-default save-place t)
 
