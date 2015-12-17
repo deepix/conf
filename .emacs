@@ -83,14 +83,6 @@
 
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
 
-;; use with gdb -i=mi ...
-(setq
- ;; use gdb-many-windows by default
- gdb-many-windows t
- ;; Non-nil means display source file containing the main routine at startup
- gdb-show-main t
- )
-
 (defun color-theme-emacs-default ()
   ;; change theme to day/night depending on time of day
   (load-theme 'solarized-light t)
