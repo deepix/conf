@@ -186,6 +186,11 @@
 (add-hook 'after-save-hook
   'executable-make-buffer-file-executable-if-script-p)
 
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
 (add-hook 'c-mode-common-hook
           (lambda ()
             (c-add-style
