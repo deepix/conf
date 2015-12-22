@@ -141,6 +141,24 @@
 (setq cscope-option-do-not-update-database t)
 (cscope-setup)
 
+;; for p4 diff and merge
+;; from: http://stackoverflow.com/questions/3822473/p4config-with-emacs
+;; -diff
+(defun command-line-diff (switch)
+  (let ((file1 (pop command-line-args-left))
+        (file2 (pop command-line-args-left)))
+    (ediff file1 file2)))
+(add-to-list 'command-switch-alist '("-diff" . command-line-diff))
+
+;; -merge
+(defun command-line-merge (switch)
+  (let ((base (pop command-line-args-left))
+        (sccs (pop command-line-args-left))
+        (mine (pop command-line-args-left))
+        (merg (pop command-line-args-left)))
+   (ediff-merge-with-ancestor sccs mine base () merg)))
+(add-to-list 'command-switch-alist '("-merge" . command-line-merge))
+
 ;; comment out "#if 0" blocks in c mode
 ;; very handy and saves a ton of cursing
 ;; this fn from http://stackoverflow.com/questions/4549015/in-c-c-mode-in-emacs-change-face-of-code-in-if-0-endif-block-to-comment-fa
