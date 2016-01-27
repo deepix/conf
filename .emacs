@@ -135,7 +135,7 @@
 (setq font-lock-maximum-decoration t)
 (setq font-lock-maximum-size 262144)
 ;; compilation
-(setq compilation-scroll-output t)
+;; (setq compilation-scroll-output t)
 
 ;; cscope
 (setq cscope-option-do-not-update-database t)
