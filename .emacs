@@ -209,6 +209,14 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
+(require 'go-mode-autoloads)
+
+(require 'jinja2-mode)
+(add-to-list 'auto-mode-alist '("\\.j2$" . jinja2-mode))
+
 (add-hook 'c-mode-common-hook
           (lambda ()
             (c-add-style
