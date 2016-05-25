@@ -38,6 +38,7 @@
                              highlight
 			     xcscope
                              nyan-mode
+                             ack
 			     linum-relative)
   "Default packages")
 
@@ -212,10 +213,74 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
-(require 'go-mode-autoloads)
+;; p4 diff/merge
+
+;; -diff
+(defun command-line-diff (switch)
+  (let ((file1 (pop command-line-args-left))
+        (file2 (pop command-line-args-left)))
+    (ediff file1 file2)))
+(add-to-list 'command-switch-alist '("-diff" . command-line-diff))
+
+;; -merge
+(defun command-line-merge (switch)
+  (let ((base (pop command-line-args-left))
+        (sccs (pop command-line-args-left))
+        (mine (pop command-line-args-left))
+        (merg (pop command-line-args-left)))
+   (ediff-merge-with-ancestor sccs mine base () merg)))
+(add-to-list 'command-switch-alist '("-merge" . command-line-merge))
+
+;;(require 'go-mode-autoloads)
+;;(require 'go-mode-load)
+(add-hook 'go-mode-hook
+          (lambda ()
+            (cscope-minor-mode)
+            (add-hook 'before-save-hook 'gofmt-before-save)))
 
 (require 'jinja2-mode)
 (add-to-list 'auto-mode-alist '("\\.j2$" . jinja2-mode))
+
+(add-hook 'java-mode-hook
+      (lambda ()
+        (cscope-minor-mode)))
+
+;; configure python tabs
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq indent-tabs-mode nil)
+        (setq tab-width 4)
+        (cscope-minor-mode)))
+;; Configure flymake for Python
+(when (load "flymake" t)
+  (defun flymake-pylint-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "epylint" (list local-file))))
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pylint-init)))
+;; Configure to wait a bit longer after edits before starting
+(setq-default flymake-no-changes-timeout '3)
+;; Keymaps to navigate to the errors
+(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-cn" 'flymake-goto-next-error)))
+(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-cp" 'flymake-goto-prev-error)))
+;; Set as a minor mode for Python
+;;(add-hook 'python-mode-hook '(lambda () (flymake-mode t)))
+;; To avoid having to mouse hover for the error message, these functions make flymake error messages
+;; appear in the minibuffer
+(defun show-fly-err-at-point ()
+  "If the cursor is sitting on a flymake error, display the message in the minibuffer"
+  (require 'cl)
+  (interactive)
+  (let ((line-no (line-number-at-pos)))
+    (dolist (elem flymake-err-info)
+      (if (eq (car elem) line-no)
+      (let ((err (car (second elem))))
+        (message "%s" (flymake-ler-text err)))))))
+(add-hook 'post-command-hook 'show-fly-err-at-point)
 
 (add-hook 'c-mode-common-hook
           (lambda ()
