@@ -1,0 +1,66 @@
+---
+
+# ansible playbook to set up my ubuntu linux system
+#
+# to run:
+# sudo apt-get install ansible
+# ansible-playbook -K setup_ubuntu.yml
+
+- hosts: localhost
+  tasks:
+    - name: update apt cache
+      # run apt-get update once a day
+      apt: update_cache=yes cache_valid_time=86400
+      become: True
+
+    - name: install some packages
+      apt: name={{ item }} state=present
+      become: True
+      with_items:
+        - tmux
+        - linux-source
+        - emacs-nox
+        - git
+        - fish
+        - cscope
+        - ack-grep
+        - tcpdump
+
+    - name: clone configuration directory
+      git: repo=https://github.com/deepix/conf.git dest=~/conf
+
+    - name: set up file links
+      file: src=~/conf/{{ item }} dest={{ item }} state=link
+      with_items:
+        - .emacs
+        - .tmux.conf
+
+    - name: set up emacs packages
+      command: emacs --batch --script ~/.emacs
+
+    - name: create fish config directory
+      file: path=~/.config/fish state=directory
+
+    - name: set up fish config link
+      file: src=~/conf/config.fish dest=~/.config/fish/config.fish state=link
+
+    - name: change default shell to fish
+      user: name={{ ansible_user }} shell=/usr/bin/fish
+      become: True
+
+    - name: get name of kernel source tarball
+      find: paths=/usr/src patterns='linux-source*tar*'
+      register: src_tar_list
+
+    - name: create directory to extract kernel source tarball
+      file: path=linux state=directory
+
+    - name: extract kernel source tarball
+      unarchive: src={{ src_tar_list.files[0]['path'] }} dest=linux creates=linux
+
+    - name: get linux source version directory
+      find: paths=linux patterns='linux-source*' file_type=directory
+      register: src_version_dir
+
+    - name: set up cscope for kernel
+      command: make cscope chdir=~/{{ src_version_dir.files[0]['path'] }} creates=~/{{ src_version_dir.files[0]['path'] }}/cscope.files
