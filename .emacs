@@ -10,7 +10,7 @@
 (add-to-list 'load-path "~/conf/elisp/")
 
 ;; else "loop" below won't run
-(require 'cl-lib)
+(require 'cl)
 
 (if (< emacs-major-version 24)
     (require 'package)
