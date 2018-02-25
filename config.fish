@@ -25,14 +25,11 @@ set -gx HADOOP_PREFIX /usr/local/Cellar/hadoop/2.7.2/libexec
 set -gx HADOOP_CONF_DIR /usr/local/Cellar/hadoop/2.7.2/libexec/etc/hadoop
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
 
-# env: go
-set -x GOROOT ~/go
 set -x CC gcc
-set -x GOPATH ~/p4_fbsd84_2/main/rs_111_20_3_cpx_ulfd/usr.src/netscaler/nsulfd/go
 
 # path
 set -U fish_user_paths ~/bin
-set -gx PATH $GOROOT/bin /root/bin /sbin /bin /usr/sbin /usr/bin /usr/local/sbin /usr/local/bin
+set -gx PATH /root/bin /sbin /bin /usr/sbin /usr/bin /usr/local/sbin /usr/local/bin
 
 # aliases
 alias sshns "env TERM=xterm ssh $NSLOGIN"
